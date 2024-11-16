@@ -61,7 +61,7 @@ const Login = async (req, res, next) => {
 
     const token = createSecretToken(user._id);
     res.cookie("token", token, {
-      httpOnly: true, // Set to false so JavaScript can access the cookie
+      httpOnly: false, // Set to false so JavaScript can access the cookie
       secure: false, // Set to true if using HTTPS
       sameSite: "Lax", // Set based on your cross-origin requirements
       path: "/", // Ensure the cookie is accessible everywhere

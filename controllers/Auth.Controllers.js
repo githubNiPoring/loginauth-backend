@@ -1,6 +1,8 @@
 const User = require("../models/User.Models");
 const { createSecretToken } = require("../utils/Secret.Token");
 const bcrypt = require("bcrypt");
+require("dotenv").config();
+const jwt = require("jsonwebtoken");
 
 const Signup = async (req, res, next) => {
   try {
@@ -71,6 +73,22 @@ const Login = async (req, res, next) => {
   }
 };
 
+const userVerification = (req, res) => {
+  const token = req.cookies.token;
+  if (!token) {
+    return res.json({ status: false });
+  }
+  jwt.verify(token, process.env.TOKEN_KEY, async (err, data) => {
+    if (err) {
+      return res.json({ status: false });
+    } else {
+      const user = await User.findById(data.id);
+      if (user) return res.json({ status: true, user: user.username });
+      else return res.json({ status: false });
+    }
+  });
+};
+
 const Logout = async (req, res) => {
   res.clearCookie("token", {
     path: "/",
@@ -80,4 +98,4 @@ const Logout = async (req, res) => {
   res.status(200).json({ message: "Logged out successfully" });
 };
 
-module.exports = { Signup, Login, Logout };
+module.exports = { Signup, Login, Logout, userVerification };

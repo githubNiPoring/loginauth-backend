@@ -14,12 +14,7 @@ mongoose
   .catch((err) => console.log(err));
 
 app.listen(PORT, () => console.log(`server running on port ${PORT}`));
-app.use(
-  cors({
-    origin: "http://localhost:3000", // Frontend's URL
-    credentials: true,
-  })
-);
+app.use(cors());
 app.use(cookieParser());
 app.use(express.json());
 
